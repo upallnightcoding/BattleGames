@@ -22,6 +22,7 @@ public class PlayerInputCntrl : MonoBehaviour
     private void OnEnable()
     {
         movement = playerInputAction.Player.Movement;
+
         movement.Enable();
     }
 
