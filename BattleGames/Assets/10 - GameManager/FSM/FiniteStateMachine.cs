@@ -27,12 +27,13 @@ public class FiniteStateMachine
 
     public void Update()
     {
-        if (nextState == null)
-        {
-            nextState = currentState.OnUpdate();
-        } else
-        {
-            //Try Value Dictionary
+        nextState = currentState.OnUpdate();
+        
+        if (nextState != null) {
+            if (states.TryGetValue(nextState, out FiniteStateMachineState state))
+            {
+                currentState = state;
+            }
         }
     }
 }
