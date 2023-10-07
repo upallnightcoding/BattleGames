@@ -28,7 +28,7 @@ public class @PlayerInputAction : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""MouseLook"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""de0fe0de-f6b8-4ccc-ab7b-42382822a65a"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
@@ -105,7 +105,7 @@ public class @PlayerInputAction : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""bb6e0078-d91c-4984-8d34-efc3c5fea7b1"",
-                    ""path"": ""<Mouse>/delta"",
+                    ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

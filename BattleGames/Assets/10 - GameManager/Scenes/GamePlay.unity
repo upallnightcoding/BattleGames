@@ -1051,21 +1051,6 @@ MonoBehaviour:
       m_RecenteringTime: 0
       m_LegacyHeadingDefinition: 0
       m_LegacyVelocityFilterStrength: 0
---- !u!114 &1466124213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7101024584672117472}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd7866d1723a4b84ca9df7147389584b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerInputCntrl: {fileID: 1655255627}
-  animator: {fileID: 0}
-  cameraObject: {fileID: 850463274}
 --- !u!1 &1655255626
 GameObject:
   m_ObjectHideFlags: 0
@@ -1556,7 +1541,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4516752524290777662}
-  - component: {fileID: 1466124213}
   m_Layer: 0
   m_Name: PlayerPreFab
   m_TagString: Untagged
@@ -2433,6 +2417,7 @@ GameObject:
   - component: {fileID: 1350362290}
   - component: {fileID: 1350362291}
   - component: {fileID: 8535613317613677376}
+  - component: {fileID: 8535613317613677377}
   m_Layer: 0
   m_Name: PlayerModelPreFab
   m_TagString: Untagged
@@ -2456,6 +2441,21 @@ MonoBehaviour:
   AutoEnableInputs: 1
   XYAxis: {fileID: 3860619651895703033, guid: 9ff673689d8bf3848888093e0f7c2601, type: 3}
   ZAxis: {fileID: 0}
+--- !u!114 &8535613317613677377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8535613317613677375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd7866d1723a4b84ca9df7147389584b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInputCntrl: {fileID: 1655255627}
+  animator: {fileID: 0}
+  cameraObject: {fileID: 850463274}
 --- !u!1 &8535622039554927303
 GameObject:
   m_ObjectHideFlags: 0

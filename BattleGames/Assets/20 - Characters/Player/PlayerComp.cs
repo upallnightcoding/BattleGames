@@ -14,8 +14,10 @@ public class PlayerComp : MonoBehaviour
 
     private FiniteStateMachine fsm;
 
-    private float moveSpeed = 5;
-    private float rotationSpeed = 10;
+    private Transform cam;
+
+    private float moveSpeed = 2;
+    private float rotationSpeed = 400;
     private float gravitySpeed = 0.0f;
     private float gravity = -9.81f;
 
@@ -25,37 +27,48 @@ public class PlayerComp : MonoBehaviour
         fsm = new FiniteStateMachine();
         fsm.Add(new PlayerStateIdle(STATE_IDLE));
 
-        charCntrl = GetComponentInChildren<CharacterController>();
-        animator = GetComponentInChildren<Animator>();
+        charCntrl = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
+        cam = Camera.main.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 direction = playerInputCntrl.ReadMovement();
+        Vector2 move = playerInputCntrl.ReadDirection();
+        Vector2 look = playerInputCntrl.ReadLook();
 
-        if (IsPlayerMoving(direction))
+        MovePlayerDirection2(move, look, Time.deltaTime);
+
+        AnimationUpdate(move);
+    }
+
+    private void AnimationUpdate(Vector2 moveDir)
+    {
+        Vector3 camForward = Vector3.Scale(cam.up, new Vector3(1, 0, 1)).normalized;
+        Vector3 move = moveDir.y * camForward + moveDir.x * cam.right;
+
+        if (move.magnitude > 1)
         {
-            MovePlayerDirection(direction, Time.deltaTime);
-
-            animator.SetFloat("hortDir", direction.x, 0.1f, Time.deltaTime);
-            animator.SetFloat("vertDir", direction.y, 0.1f, Time.deltaTime);
+            move.Normalize();
         }
+
+        Vector3 moveInput = move;
+
+        Vector3 localMove = transform.InverseTransformDirection(moveInput);
+        float turnAmount = localMove.x;
+        float forwardAmount = localMove.z;
+
+        animator.SetFloat("turn", turnAmount, 0.1f, Time.deltaTime);
+        animator.SetFloat("forward", forwardAmount, 0.1f, Time.deltaTime);
     }
 
-    private void MovePlayerDirection(Vector2 direction, float dt)
+    private bool IsPlayerMoving(Vector2 direction)
     {
-        Vector3 move = new Vector3(direction.x, 0.0f, direction.y);
-
-        charCntrl.Move(move * moveSpeed * dt);
+        return((int)direction.magnitude != 0);
     }
 
-    private bool IsPlayerMoving(Vector2 playerDirection)
-    {
-        return((int)playerDirection.magnitude != 0);
-    }
-
-    private void MovePlayerDirection1(Vector2 playerDirection, float dt)
+    private void MovePlayerDirection2(Vector2 move, Vector2 look,  float dt)
     {
         if (!charCntrl.isGrounded)
         {
@@ -66,34 +79,34 @@ public class PlayerComp : MonoBehaviour
             gravitySpeed = 0.0f;
         }
 
-        Vector3 direction = cameraObject.forward * playerDirection.y;
-        direction = direction + cameraObject.right * playerDirection.x;
-        direction.y = 0.0f;
-        direction.Normalize();
+        Vector3 moveDir = cameraObject.forward * move.y;
+        moveDir = moveDir + cameraObject.right * move.x;
+        moveDir.y = 0.0f;
+        moveDir.Normalize();
 
-        Vector3 hortMovement = moveSpeed * direction;
+        Vector3 hortMovement = moveSpeed * moveDir;
         Vector3 vertMovement = Vector3.up * gravitySpeed;
 
         charCntrl.Move(dt * (vertMovement + hortMovement));
 
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * dt);
+        Ray ray = Camera.main.ScreenPointToRay(look);
+
+        RaycastHit hit;
+        Vector3 lookPos = Vector3.zero;
+
+        if (Physics.Raycast(ray, out hit, 100))
+        {
+            lookPos = hit.point;
+        }
+
+        Vector3 lookDir = lookPos - transform.position;
+        lookDir.y = 0;
+
+        transform.LookAt(transform.position + lookDir, Vector3.up);
+
+        //Quaternion targetRotation = Quaternion.LookRotation(transform.position + lookDir);
+        //Quaternion playerRotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * dt);
 
         //transform.rotation = playerRotation;
-    }
-
-    private void MovePlayer()
-    {
-        Vector2 movement = playerInputCntrl.ReadMovement();
-
-        Vector3 forward = (transform.forward * movement.y);
-        Vector3 sideways = (transform.right * movement.x);
-        Vector3 direction = forward + sideways;
-
-        charCntrl.Move(direction * moveSpeed * Time.deltaTime);
-
-        Debug.Log($"Movement: {movement.x},{movement.y}");
-
-        fsm.Update();
     }
 }
