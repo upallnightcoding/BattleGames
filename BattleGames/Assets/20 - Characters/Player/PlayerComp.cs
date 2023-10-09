@@ -9,6 +9,7 @@ public class PlayerComp : MonoBehaviour
     [SerializeField] private PlayerInputCntrl playerInputCntrl;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform cameraObject;
+    [SerializeField] private GameData gameData;
 
     private CharacterController charCntrl;
 
@@ -16,7 +17,7 @@ public class PlayerComp : MonoBehaviour
 
     private Transform cam;
 
-    private float moveSpeed = 2;
+    private float moveSpeed;
     private float rotationSpeed = 400;
     private float gravitySpeed = 0.0f;
     private float gravity = -9.81f;
@@ -24,6 +25,8 @@ public class PlayerComp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        moveSpeed = gameData.moveSpeed;
+
         fsm = new FiniteStateMachine();
         fsm.Add(new PlayerStateIdle(STATE_IDLE));
 
@@ -61,11 +64,6 @@ public class PlayerComp : MonoBehaviour
 
         animator.SetFloat("turn", turnAmount, 0.1f, Time.deltaTime);
         animator.SetFloat("forward", forwardAmount, 0.1f, Time.deltaTime);
-    }
-
-    private bool IsPlayerMoving(Vector2 direction)
-    {
-        return((int)direction.magnitude != 0);
     }
 
     private void MovePlayerDirection2(Vector2 move, Vector2 look,  float dt)
